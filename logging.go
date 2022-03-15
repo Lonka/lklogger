@@ -18,13 +18,9 @@ type LoggerBase struct {
 }
 
 var (
-	all       *zap.Logger
+	all = NewLogger("", zapcore.InfoLevel, 10, 7, 7, true, "All")
 	// InfoLevel = zapcore.InfoLevel
 )
-
-func NewAllLogger() {
-	all = NewLogger("", zapcore.InfoLevel, 10, 7, 7, true, "All")
-}
 
 func getRunMode() string {
 	cfg, err := ini.Load("setting.ini")
@@ -129,9 +125,9 @@ func getEncoderConfig() zapcore.EncoderConfig {
 		MessageKey:     "msg",
 		StacktraceKey:  "stacktrace",
 		LineEnding:     "\r\n",                         //\n
-		EncodeTime:     customizeTimeEncoder,           // ISO8601 UTC 时间格式
+		EncodeTime:     customizeTimeEncoder,           // ISO8601 UTC
 		EncodeDuration: zapcore.SecondsDurationEncoder, //
-		//EncodeCaller: zapcore.FullCallerEncoder,      // 全路径编码器
+		//EncodeCaller: zapcore.FullCallerEncoder,
 		EncodeCaller: zapcore.ShortCallerEncoder,
 		EncodeName:   zapcore.FullNameEncoder,
 	}

@@ -1,4 +1,4 @@
-module golib.com/logging
+module github.com/Lonka/lklogger
 
 go 1.13
 

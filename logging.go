@@ -85,6 +85,11 @@ func loadConfig(configPath string) LogConfig {
 	v.SetDefault("logger.max_age_days", 7)
 	v.SetDefault("logger.compress", false)
 
+	// Environment variable settings
+	v.SetEnvPrefix("LK")
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	v.AutomaticEnv()
+
 	// 4. Map only the 'logger' section
 	var cfg LogConfig
 	if err := v.UnmarshalKey("logger", &cfg); err != nil {

@@ -78,13 +78,13 @@ func loadConfig(configPath string) LogConfig {
 	}
 
 	// 3. Set default values (lowest priority)
-	v.SetDefault("logger.level", "info")
-	v.SetDefault("logger.format", "text")
-	v.SetDefault("logger.output_dir", "./log")
-	v.SetDefault("logger.max_size_mb", 10)
-	v.SetDefault("logger.max_backup_files", 7)
-	v.SetDefault("logger.max_age_days", 7)
-	v.SetDefault("logger.compress", false)
+	v.SetDefault("level", "info")
+	v.SetDefault("format", "text")
+	v.SetDefault("output_dir", "./log")
+	v.SetDefault("max_size_mb", 10)
+	v.SetDefault("max_backup_files", 7)
+	v.SetDefault("max_age_days", 7)
+	v.SetDefault("compress", false)
 
 	// Environment variable settings
 	v.SetEnvPrefix("LK")

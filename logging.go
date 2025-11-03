@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -129,6 +130,7 @@ func Init(configPath string, overrideCfg *LogConfig) {
 		}
 	}
 
+	fmt.Printf("Loaded config: %+v\n", currentConfig)
 	// 3. Initialize the global logger (All Logger) using the final configuration
 	all = NewLoggerFromConfig(currentConfig, "All")
 }

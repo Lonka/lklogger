@@ -16,13 +16,13 @@ import (
 
 // LogConfig defines the log configuration structure with mapstructure tags for Viper mapping.
 type LogConfig struct {
-	Level          string `mapstructure:"level"`             // Log level (debug, info, warn, error)
-	Format         string `mapstructure:"format"`            // Format (text, json) - mainly affects encoder selection
-	OutputDir      string `mapstructure:"output_dir"`        // Log file output directory
-	MaxSizeMB      int    `mapstructure:"max_size_mb"`       // Log file rotation size (MB)
+	Level          string `mapstructure:"level"`            // Log level (debug, info, warn, error)
+	Format         string `mapstructure:"format"`           // Format (text, json) - mainly affects encoder selection
+	OutputDir      string `mapstructure:"output_dir"`       // Log file output directory
+	MaxSizeMB      int    `mapstructure:"max_size_mb"`      // Log file rotation size (MB)
 	MaxBackupFiles int    `mapstructure:"max_backup_files"` // Maximum number of backup files
-	MaxAgeDays     int    `mapstructure:"max_age_days"`      // Maximum retention days
-	Compress       bool   `mapstructure:"compress"`          // Whether to compress backup files
+	MaxAgeDays     int    `mapstructure:"max_age_days"`     // Maximum retention days
+	Compress       bool   `mapstructure:"compress"`         // Whether to compress backup files
 }
 
 // LoggerBase is the log instance structure exposed for external use.
@@ -91,12 +91,16 @@ func loadConfig(configPath string) LogConfig {
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	v.AutomaticEnv()
 
+	type Config struct {
+		Logger LogConfig `mapstructure:"logger"`
+	}
+
 	// 4. Map only the 'logger' section
-	var cfg LogConfig
-	if err := v.UnmarshalKey("logger", &cfg); err != nil {
+	var cfg Config
+	if err := v.Unmarshal(&cfg); err != nil {
 		log.Fatalf("Fatal: Failed to unmarshal 'logger' section: %v", err)
 	}
-	return cfg
+	return cfg.Logger
 }
 
 // Init initializes the global logging system and accepts an optional override configuration.
@@ -179,7 +183,7 @@ func newCoreFromConfig(cfg LogConfig, serviceName string) zapcore.Core {
 		consoleEncoderConfig := getEncoderConfig()
 		consoleEncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // Colored level for console
 		fileEncoderConfig := getEncoderConfig()
-		fileEncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder         // No color for file output
+		fileEncoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder // No color for file output
 
 		consoleEncoder = zapcore.NewConsoleEncoder(consoleEncoderConfig)
 		fileEncoder = zapcore.NewConsoleEncoder(fileEncoderConfig)
